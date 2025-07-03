@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Criminal Records</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container mt-4">
+    <h2>Criminal Records</h2>
+    <form method="get" class="mb-3">
+        <input type="text" name="q" class="form-control" placeholder="Search by name, case number or parish" value="{{ request.GET.q }}">
+    </form>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Defendant</th>
+                <th>Case Number</th>
+                <th>Parish</th>
+                <th>Date Filed</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for record in records %}
+            <tr>
+                <td>{{ record.defendant_name }}</td>
+                <td>{{ record.case_number }}</td>
+                <td>{{ record.parish }}</td>
+                <td>{{ record.date_filed }}</td>
+                <td><a href="{% url 'record_detail' record.pk %}" class="btn btn-sm btn-primary">View</a></td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5">No records found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="mt-4">
+        <nav>
+            <ul class="pagination">
+                {% if records.has_previous %}
+                    <li class="page-item"><a class="page-link" href="?page={{ records.previous_page_number }}">Previous</a></li>
+                {% endif %}
+                <li class="page-item disabled"><span class="page-link">Page {{ records.number }} of {{ records.paginator.num_pages }}</span></li>
+                {% if records.has_next %}
+                    <li class="page-item"><a class="page-link" href="?page={{ records.next_page_number }}">Next</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+</div>
+</body>
+</html>
